@@ -10,6 +10,8 @@ USER root
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
+ENV R_VERSION="3.6.2"
+
 
 RUN REPO=http://cdn-fastly.deb.debian.org \
  && echo "deb $REPO/debian stretch main\ndeb $REPO/debian-security stretch/updates main" > /etc/apt/sources.list \
@@ -47,9 +49,7 @@ RUN REPO=http://cdn-fastly.deb.debian.org \
     tar \
     python3-pip \
     apt-utils \
-    curl \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+    curl
  
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -60,9 +60,7 @@ RUN apt-get update && \
     circos \
     parallel \
     time \
-    htop \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    htop
 
 RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >  /etc/apt/sources.list.d/backports.list && \
     apt-get update && \
@@ -80,9 +78,7 @@ RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >  /etc/apt/s
     seqtk \
 #    ea-utils \
     rna-star \
-    lftp \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    lftp
     
 # we need dvipng so that matplotlib can do LaTeX
 # we want OpenBLAS for faster linear algebra as described here: http://brettklamer.com/diversions/statistical/faster-blas-in-r/
@@ -107,9 +103,7 @@ RUN apt-get update \
     liblzma-dev \
     libunwind-dev \
     libcairo2-dev \
-    texinfo \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+    texinfo
  
 # R pre-requisites
 RUN apt-get update && \
@@ -120,11 +114,7 @@ RUN apt-get update && \
     graphviz \
     libgraphviz-dev \
     gnupg2 \
-    openssl &&\ 
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
- 
+    openssl
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -148,12 +138,15 @@ USER $NB_USER
 RUN mkdir /home/$NB_USER/work && \
     mkdir /home/$NB_USER/.jupyter && \
     mkdir /home/$NB_USER/.ssh && \
+    mkdir -p /home/$NB_USER/.local/share/jupyter/runtime && \
     printf "Host gitlab.oit.duke.edu \n \t IdentityFile ~/work/.HTSgitlab.key\n"  > /home/$NB_USER/.ssh/config && \
     echo "cacert=/etc/ssl/certs/ca-certificates.crt" > /home/$NB_USER/.curlrc
 
+USER root
+
 RUN pip3 install --upgrade setuptools
 RUN pip3 install wheel
-RUN pip3 install --user jupyter
+RUN pip3 install jupyter
 
 RUN pip3 install --no-cache-dir  \
  #   'nomkl' \
@@ -221,7 +214,7 @@ RUN pip3 uninstall --yes matplotlib && \
     pip3 install 'matplotlib==2.2.3'
 
     
-USER root    
+# USER root    
 # Activate ipywidgets extension in the environment that runs the notebook server
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
 RUN ipcluster nbextension  enable --user
@@ -241,29 +234,34 @@ USER root
 
 RUN apt-get update && \
     apt-get install dirmngr -yq --install-recommends && \
-    apt-get install software-properties-common -yq &&\
-    apt-get install apt-transport-https -yq 
+    apt-get install software-properties-common -yq && \
+    apt-get install apt-transport-https -yq
 
+# Install R
+# RUN apt-get install gnupg2
+# RUN mkdir ~/.gnupg && \
+#      echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf && \
+#      gpg2 --keyserver keys.gnupg.net --recv-keys 3F32EE77E331692F
 
-# Add cran repo    
-RUN echo "deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/" >> /etc/sources.list
+# Add cran repo
 
-#RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/' && \ 
-#    apt-get update && \
-#    apt-cache policy r-base
-# R packages
+RUN echo "deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/" >> /etc/sources.list && \
+    add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/'
 
-RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/' && \ 
-    apt-get update && \
-    apt-get install -yq --allow-unauthenticated -t stretch-cran35   r-recommended=3.6.0-1~stretchcran.0 \
-             r-base=3.6.0-1~stretchcran.0 \
-             r-base-core=3.6.0-1~stretchcran.0 \
-             r-base-dev=3.6.0-1~stretchcran.0 \
-             r-mathlib=3.6.0-1~stretchcran.0 \
-             r-base-html=3.6.0-1~stretchcran.0 \
-             r-doc-html=3.6.0-1~stretchcran.0 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get -yq --no-install-recommends --allow-unauthenticated install \
+    r-base=${R_VERSION}* \
+    r-base-core=${R_VERSION}* \
+    r-base-dev=${R_VERSION}* \
+    r-mathlib=${R_VERSION}* \
+    r-recommended=${R_VERSION}* \
+    r-base-html=${R_VERSION}* \
+    r-doc-html=${R_VERSION}* \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libcairo2-dev \
+    libxt-dev
 
 RUN Rscript -e "install.packages(c('IRkernel', 'plyr','devtools', 'RCurl', 'curl', 'tidyverse', 'shiny'), repos = 'https://cloud.r-project.org/')"
 
@@ -360,9 +358,7 @@ USER root
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     art-nextgen-simulation-tools \
-    art-nextgen-simulation-tools-profiles \
-    && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    art-nextgen-simulation-tools-profiles
 
 RUN Rscript -e "BiocManager::install(c('Gviz'))"
 RUN Rscript -e "BiocManager::install(c('phyloseq'))"
@@ -372,6 +368,11 @@ RUN Rscript -e "BiocManager::install(c('phyloseq'))"
 
 #######
 USER root
+
+# Clean up 
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN mkdir /data /shared_space 
 RUN chown jovyan /data /shared_space 
 
