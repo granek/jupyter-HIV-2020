@@ -15,9 +15,9 @@ IFS=$OLDIFS
 
 echo ipyn-az-$MYHOSTID.oit.duke.edu:443
 
-sudo docker kill jupyter-hts-2019-test-443
-sudo docker rm jupyter-hts-2019-test-443
-sudo docker run --name jupyter-hts-2019-test-443 \
+sudo docker kill jupyter-hiv-2020-443
+sudo docker rm jupyter-hiv-2020-443
+sudo docker run --name jupyter-hiv-2020-443 \
   -d -p 127.0.0.1\:\:8888 \
   --memory 5000M \
   --init \
@@ -26,7 +26,7 @@ sudo docker run --name jupyter-hts-2019-test-443 \
   -e VIRTUAL_HOST=ipyn-az-$MYHOSTID.oit.duke.edu\:443 \
   -e MAP_VIRTUAL_PORT=443 \
   -v /srv/persistent-data/homedirs/monitoring-user/work\:/home/jovyan/work \
-  -v /srv/persistent-data/homedirs/shared_space_2019\:/shared_space \
-  -v /srv/persistent-data/homedirs/2015_data\:/data/:ro \
+  -v /srv/persistent-data/homedirs/shared_space_hiv2020\:/shared_space \
+  -v /srv/persistent-data/homedirs/instructorspace-hiv2020\:/data/:ro \
   -e NB_UID=1000 \
-  -t jupyter-hts-2019-test
+  -t jupyter-hiv-test2020

@@ -1,1 +1,1 @@
-sudo docker build --tag jupyter-hts-2019-test .
+sudo docker build --tag jupyter-hiv-test2020 .
