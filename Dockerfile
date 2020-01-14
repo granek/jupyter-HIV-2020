@@ -60,7 +60,8 @@ RUN apt-get update && \
     circos \
     parallel \
     time \
-    htop
+    htop \
+    rna-star
 
 RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >  /etc/apt/sources.list.d/backports.list && \
     apt-get update && \
@@ -76,8 +77,6 @@ RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >  /etc/apt/s
     bedtools \
     vcftools \
     seqtk \
-#    ea-utils \
-    rna-star \
     lftp
     
 # we need dvipng so that matplotlib can do LaTeX
