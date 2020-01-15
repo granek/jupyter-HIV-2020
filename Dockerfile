@@ -7,6 +7,8 @@ MAINTAINER Janice McCarthy "janice.mccarthy@duke.edu"
 
 USER root
 
+RUN echo "force complete rebuild"
+
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
