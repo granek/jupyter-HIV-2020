@@ -367,7 +367,9 @@ RUN Rscript -e "BiocManager::install(c('phyloseq'))"
 # Install qiime1 for demultiplexing
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    python-pip
+    python-pip \
+    python-setuptools
+
 
 RUN pip install --no-cache-dir qiime
 
