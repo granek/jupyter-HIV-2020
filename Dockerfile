@@ -369,8 +369,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     python-pip
 
-# RUN pip install --no-cache-dir qiime
-RUN pip install qiime
+RUN pip install --no-cache-dir qiime
 
 # UNDER CONSTRUCTION: Nerd Work Zone <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
