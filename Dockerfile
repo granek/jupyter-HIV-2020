@@ -368,7 +368,10 @@ RUN Rscript -e "BiocManager::install(c('phyloseq'))"
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     python-pip \
-    python-setuptools
+    python-setuptools \
+    python-numpy
+
+
 
 
 RUN pip install --no-cache-dir qiime
