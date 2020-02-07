@@ -364,7 +364,12 @@ RUN apt-get update && \
 RUN Rscript -e "BiocManager::install(c('Gviz'))"
 RUN Rscript -e "BiocManager::install(c('phyloseq'))"
 
-RUN pip install qiime
+# Install qiime1 for demultiplexing
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    python-pip
+
+RUN pip3 install qiime
 
 # UNDER CONSTRUCTION: Nerd Work Zone <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
