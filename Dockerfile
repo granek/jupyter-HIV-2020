@@ -370,8 +370,7 @@ RUN apt-get update && \
     python-pip \
     python-setuptools \
     python-numpy \
-    python-matplotlib \
-    python-pandas
+    cython
 
 
 
