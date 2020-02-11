@@ -368,7 +368,7 @@ RUN Rscript -e "BiocManager::install(c('phyloseq'))"
 RUN pip3 install jupytext --upgrade
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends --allow-unauthenticated \
     python3-rpy2
 
 
