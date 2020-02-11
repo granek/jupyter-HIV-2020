@@ -365,7 +365,7 @@ RUN Rscript -e "BiocManager::install(c('Gviz'))"
 RUN Rscript -e "BiocManager::install(c('phyloseq'))"
 
 # Import Rmarkdown into jupyter
-RUN pip install jupytext --upgrade
+RUN pip3 install jupytext --upgrade
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
