@@ -14,6 +14,7 @@ RUN echo "force complete rebuild"
 ENV DEBIAN_FRONTEND noninteractive
 ENV R_VERSION="4.0.4"
 
+RUN echo "here"
 RUN REPO=http://cdn-fastly.deb.debian.org \
  && echo "deb $REPO/debian/dists/buster main\n deb http://security.debian.org/debian-security/dists/buster/updates main contrib non-free" > /etc/apt/sources.list \
  && apt-get update && apt-get -yq dist-upgrade \
@@ -64,7 +65,8 @@ RUN apt-get update && \
     htop \
     rna-star
 
-RUN echo "deb http://ftp.debian.org/debian/dists/buster-backports main" >  /etc/apt/sources.list.d/backports.list && \
+RUN echo "backports\n"
+RUN echo "deb http://ftp.debian.org/debian/dists/ buster-backports main" > /etc/apt/sources.list.d/backports.list && \
     apt-get update && \
     apt-get -t buster-backports install -y --no-install-recommends \
     bwa \
