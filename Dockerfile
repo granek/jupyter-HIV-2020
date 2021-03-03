@@ -7,14 +7,14 @@ MAINTAINER Janice McCarthy "janice.mccarthy@duke.edu"
 
 USER root
 
-RUN echo "force complete rebuild"
-
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
 ENV R_VERSION="4.0.4"
 
 RUN echo "adding repositories"
+RUN echo "try to force error messages"
+
 RUN REPO=http://cdn-fastly.deb.debian.org \
  && echo "deb $REPO/debian/dists/buster main" > /etc/apt/sources.list \
  && echo "deb http://security.debian.org/debian-security/dists/buster/updates main contrib non-free" >> /etc/apt/sources.list \
