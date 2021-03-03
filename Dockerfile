@@ -16,8 +16,8 @@ RUN echo "adding repositories"
 RUN echo "try to force error messages"
 
 RUN REPO=http://cdn-fastly.deb.debian.org \
- && echo "deb $REPO/debian/dists/buster main" > /etc/apt/sources.list \
- && echo "deb http://security.debian.org/debian-security/dists/buster/updates main contrib non-free" >> /etc/apt/sources.list \
+ && echo "deb $REPO/debian buster main" > /etc/apt/sources.list \
+ && echo "deb http://security.debian.org/debian-security buster updates main contrib non-free" >> /etc/apt/sources.list \
  && apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     wget \
@@ -67,7 +67,7 @@ RUN apt-get update && \
     rna-star
 
 RUN echo "backports\n"
-RUN echo "deb http://ftp.debian.org/debian/dists/ buster-backports main" > /etc/apt/sources.list.d/backports.list && \
+RUN echo "deb http://ftp.debian.org/debian buster-backports main" > /etc/apt/sources.list.d/backports.list && \
     apt-get update && \
     apt-get -t buster-backports install -y --no-install-recommends \
     bwa \
