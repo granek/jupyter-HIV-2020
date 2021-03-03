@@ -14,9 +14,9 @@ RUN echo "force complete rebuild"
 ENV DEBIAN_FRONTEND noninteractive
 ENV R_VERSION="4.0.4"
 
-
 RUN REPO=http://cdn-fastly.deb.debian.org \
- && echo "deb $REPO/debian buster main\ndeb $REPO/debian-security buster/updates main" > /etc/apt/sources.list \
+ && echo "deb $REPO/debian buster main\n deb http://security.debian.org/debian-security buster/updates main contrib non-free
+" > /etc/apt/sources.list \
  && apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     wget \
