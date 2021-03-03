@@ -167,10 +167,9 @@ RUN pip3 install --no-cache-dir 'patsy' \
     'cloudpickle' \
     'dill' 
     
-RUN pip3 install --no-cache-dir 'numba' \
-    'bokeh' \
+# RUN pip3 install --no-cache-dir 'numba' 
+RUN pip3 install --no-cache-dir  'bokeh' \
     'sqlalchemy'
- #   'hdf5' \
  
 RUN pip3 install --no-cache-dir 'h5py' \
 	'pyzmq' \
