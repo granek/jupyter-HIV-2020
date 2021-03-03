@@ -238,6 +238,8 @@ RUN apt-get update && \
     apt-get install software-properties-common -yq && \
     apt-get install apt-transport-https -yq
 
+RUN sudo 
+
 # Install R
 # RUN apt-get install gnupg2
 # RUN mkdir ~/.gnupg && \
@@ -247,10 +249,11 @@ RUN apt-get update && \
 # Add cran repo
 
 RUN echo "deb http://cloud.r-project.org/bin/linux/debian buster-cran40/" >> /etc/sources.list && \
+    apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF' \ 
     add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
 
 RUN apt-get update && \
-    apt-get -yq --no-install-recommends --allow-unauthenticated install \
+    apt-get -yq --no-install-recommends install \
     r-base=${R_VERSION}* \
     r-base-core=${R_VERSION}* \
     r-base-dev=${R_VERSION}* \
