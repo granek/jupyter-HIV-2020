@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-FROM debian:stretch 
+FROM debian:buster 
 
 MAINTAINER Janice McCarthy "janice.mccarthy@duke.edu"
 
@@ -12,11 +12,11 @@ RUN echo "force complete rebuild"
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
-ENV R_VERSION="3.6.2"
+ENV R_VERSION="4.0.4"
 
 
 RUN REPO=http://cdn-fastly.deb.debian.org \
- && echo "deb $REPO/debian stretch main\ndeb $REPO/debian-security stretch/updates main" > /etc/apt/sources.list \
+ && echo "deb $REPO/debian buster main\ndeb $REPO/debian-security buster/updates main" > /etc/apt/sources.list \
  && apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     wget \
@@ -65,9 +65,9 @@ RUN apt-get update && \
     htop \
     rna-star
 
-RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >  /etc/apt/sources.list.d/backports.list && \
+RUN echo "deb http://ftp.debian.org/debian buster-backports main" >  /etc/apt/sources.list.d/backports.list && \
     apt-get update && \
-    apt-get -t stretch-backports install -y --no-install-recommends \
+    apt-get -t buster-backports install -y --no-install-recommends \
     bwa \
     samtools \
     tabix \
@@ -246,8 +246,8 @@ RUN apt-get update && \
 
 # Add cran repo
 
-RUN echo "deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/" >> /etc/sources.list && \
-    add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/'
+RUN echo "deb http://cloud.r-project.org/bin/linux/debian buster-cran40/" >> /etc/sources.list && \
+    add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
 
 RUN apt-get update && \
     apt-get -yq --no-install-recommends --allow-unauthenticated install \
