@@ -16,7 +16,7 @@ ENV R_VERSION="4.0.4"
 
 RUN echo "here"
 RUN REPO=http://cdn-fastly.deb.debian.org \
- && echo "deb $REPO/debian/dists/buster main\n deb http://security.debian.org/debian-security/dists/buster/updates main contrib non-free" > /etc/apt/sources.list \
+ && echo -en "deb $REPO/debian/dists/buster main\ndeb http://security.debian.org/debian-security/dists/buster/updates main contrib non-free" > /etc/apt/sources.list \
  && apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     wget \
