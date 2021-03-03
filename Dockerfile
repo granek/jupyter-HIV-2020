@@ -57,7 +57,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     libxml2-dev \
     libgsl0-dev \
-    libav-tools \
+    ffmpeg \
     fastqc default-jre \
     circos \
     parallel \
