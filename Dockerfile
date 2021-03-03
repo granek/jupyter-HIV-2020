@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-FROM debian:stretch 
+FROM debian:buster 
 
 MAINTAINER Janice McCarthy "janice.mccarthy@duke.edu"
 
@@ -10,11 +10,13 @@ USER root
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
-ENV R_VERSION="3.6.2"
+ENV R_VERSION="4.0.4"
 
+RUN echo "adding repositories"
 
 RUN REPO=http://cdn-fastly.deb.debian.org \
- && echo "deb $REPO/debian stretch main\ndeb $REPO/debian-security stretch/updates main" > /etc/apt/sources.list \
+ && echo "deb $REPO/debian buster main" > /etc/apt/sources.list \
+ && echo "deb http://security.debian.org/debian-security buster/updates main contrib non-free" >> /etc/apt/sources.list \
  && apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     wget \
@@ -55,7 +57,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     libxml2-dev \
     libgsl0-dev \
-    libav-tools \
+    ffmpeg \
     fastqc default-jre \
     circos \
     parallel \
@@ -63,9 +65,10 @@ RUN apt-get update && \
     htop \
     rna-star
 
-RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >  /etc/apt/sources.list.d/backports.list && \
+RUN echo "backports\n"
+RUN echo "deb http://ftp.debian.org/debian buster-backports main" > /etc/apt/sources.list.d/backports.list && \
     apt-get update && \
-    apt-get -t stretch-backports install -y --no-install-recommends \
+    apt-get -t buster-backports install -y --no-install-recommends \
     bwa \
     samtools \
     tabix \
@@ -167,9 +170,10 @@ RUN pip3 install --no-cache-dir 'patsy' \
     'cloudpickle' \
     'dill' 
     
-# RUN pip3 install --no-cache-dir 'numba' 
-RUN pip3 install --no-cache-dir  'bokeh' \
+RUN pip3 install --no-cache-dir 'numba' \
+    'bokeh' \
     'sqlalchemy'
+ #   'hdf5' \
  
 RUN pip3 install --no-cache-dir 'h5py' \
 	'pyzmq' \
@@ -235,6 +239,8 @@ RUN apt-get update && \
     apt-get install software-properties-common -yq && \
     apt-get install apt-transport-https -yq
 
+RUN sudo 
+
 # Install R
 # RUN apt-get install gnupg2
 # RUN mkdir ~/.gnupg && \
@@ -243,11 +249,12 @@ RUN apt-get update && \
 
 # Add cran repo
 
-RUN echo "deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/" >> /etc/sources.list && \
-    add-apt-repository 'deb https://cloud.r-project.org/bin/linux/debian stretch-cran35/'
+RUN echo "deb http://cloud.r-project.org/bin/linux/debian buster-cran40/" >> /etc/sources.list && \
+    apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF' \ 
+    add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
 
 RUN apt-get update && \
-    apt-get -yq --no-install-recommends --allow-unauthenticated install \
+    apt-get -yq --no-install-recommends install \
     r-base=${R_VERSION}* \
     r-base-core=${R_VERSION}* \
     r-base-dev=${R_VERSION}* \
@@ -360,6 +367,15 @@ RUN apt-get update && \
 
 RUN Rscript -e "BiocManager::install(c('Gviz'))"
 RUN Rscript -e "BiocManager::install(c('phyloseq'))"
+
+# Import Rmarkdown into jupyter
+RUN pip3 install jupytext --upgrade
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends --allow-unauthenticated \
+    python3-rpy2 \
+    python3-tzlocal \
+    python3-simplegeneric
 
 
 # UNDER CONSTRUCTION: Nerd Work Zone <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
