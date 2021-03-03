@@ -34,7 +34,9 @@ RUN REPO=http://cdn-fastly.deb.debian.org \
     xclip \
     build-essential \
     python-dev \
-    python3.6-dev \
+    python \
+    python3-dev \
+    python3 \
     unzip \
     libsm6 \
     pandoc \
@@ -89,10 +91,10 @@ RUN apt-get update \
  && apt-get install -yq --no-install-recommends \
     dvipng \
     libopenblas-base \
-    libarmadillo7 \
+    libarmadillo9 \
     libarmadillo-dev \
     liblapack3 \
-    libcurl3 \
+    libcurl4 \
     libcurl4-gnutls-dev \
     libssl1.1 \
     libssl-dev \
@@ -170,8 +172,8 @@ RUN pip3 install --no-cache-dir 'patsy' \
     'cloudpickle' \
     'dill' 
     
-RUN pip3 install --no-cache-dir 'numba' \
-    'bokeh' \
+#RUN pip3 install --no-cache-dir 'numba' 
+RUN pip3 install --no-cache-dir  'bokeh' \
     'sqlalchemy'
  #   'hdf5' \
  
@@ -239,7 +241,7 @@ RUN apt-get update && \
     apt-get install software-properties-common -yq && \
     apt-get install apt-transport-https -yq
 
-RUN sudo 
+#RUN sudo 
 
 # Install R
 # RUN apt-get install gnupg2
