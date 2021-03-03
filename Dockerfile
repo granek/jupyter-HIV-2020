@@ -32,7 +32,7 @@ RUN REPO=http://cdn-fastly.deb.debian.org \
     xclip \
     build-essential \
     python-dev \
-    python3-dev \
+    python3.6-dev \
     unzip \
     libsm6 \
     pandoc \
