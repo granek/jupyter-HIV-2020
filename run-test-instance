@@ -17,7 +17,7 @@ echo ipyn-az-$MYHOSTID.oit.duke.edu:443
 
 sudo docker kill jupyter-hiv-2020-443
 sudo docker rm jupyter-hiv-2020-443
-sudo docker run --name jupyter-hiv-2020-443 \
+sudo docker run --name jupyter-hiv-2021-443 \
   -d -p 127.0.0.1\:\:8888 \
   --memory 5000M \
   --init \
@@ -29,4 +29,4 @@ sudo docker run --name jupyter-hiv-2020-443 \
   -v /srv/persistent-data/homedirs/shared_space_hiv2020\:/shared_space \
   -v /srv/persistent-data/homedirs/instructorspace-hiv2020\:/data/:ro \
   -e NB_UID=1000 \
-  -t jupyter-hiv-test2020
+  -t jupyter-hiv-test2021
