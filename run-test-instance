@@ -15,6 +15,8 @@ IFS=$OLDIFS
 
 port=443
 MYHOSTID=07
+sudo docker kill jupyter-hiv2020-443
+sudo docker rm jupyter-hiv2020-443
 sudo docker run --name jupyter-hiv2020-$port \
         -d -p 127.0.0.1\:\:8888 \
         --memory 5000M \
