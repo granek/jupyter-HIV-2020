@@ -12,7 +12,7 @@ USER root
 ENV DEBIAN_FRONTEND noninteractive
 ENV R_VERSION="4.0.4"
 
-RUN echo "adding repositories"
+RUN echo "triggering build"
 
 RUN REPO=http://cdn-fastly.deb.debian.org \
  && echo "deb $REPO/debian buster main" > /etc/apt/sources.list \
