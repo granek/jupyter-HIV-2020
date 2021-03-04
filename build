@@ -1,1 +1,1 @@
-sudo docker build --tag jupyter-hiv-2020 .
+sudo docker build --tag jupyter-hiv-2021 .
