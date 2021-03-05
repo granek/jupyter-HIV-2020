@@ -13,20 +13,20 @@ do
 done < $INPUT
 IFS=$OLDIFS
 
-echo ipyn-az-$MYHOSTID.oit.duke.edu:443
-
-sudo docker kill jupyter-hiv-2020-443
-sudo docker rm jupyter-hiv-2020-443
-sudo docker run --name jupyter-hiv-2020-443 \
-  -d -p 127.0.0.1\:\:8888 \
-  --memory 5000M \
-  --init \
-  -e PASSWORD=$STAGING_TEST_PASSWORD \
-  -e DISABLE_XSRF=TRUE \
-  -e VIRTUAL_HOST=ipyn-az-$MYHOSTID.oit.duke.edu\:443 \
-  -e MAP_VIRTUAL_PORT=443 \
-  -v /srv/persistent-data/homedirs/monitoring-user/work\:/home/jovyan/work \
-  -v /srv/persistent-data/homedirs/shared_space_hiv2020\:/shared_space \
-  -v /srv/persistent-data/homedirs/instructorspace-hiv2020\:/data/:ro \
-  -e NB_UID=1000 \
-  -t jupyter-hiv-test2020
+port=443
+MYHOSTID=07
+sudo docker kill jupyter-hiv2020-443
+sudo docker rm jupyter-hiv2020-443
+sudo docker run --name jupyter-hiv2020-$port \
+        -d -p 127.0.0.1\:\:8888 \
+        --memory 5000M \
+        --init \
+        -e PASSWORD=$STAGING_TEST_PASSWORD \
+        -e DISABLE_XSRF=TRUE \
+        -e VIRTUAL_HOST=ipyn-az-$MYHOSTID.oit.duke.edu\:$port \
+        -e MAP_VIRTUAL_PORT=$port \
+        -v /srv/persistent-data/homedirs/monitoring-user/work\:/home/jovyan/work \
+        -v /srv/persistent-data/homedirs/shared_space_hiv2020\:/shared_space \
+        -v /srv/persistent-data/homedirs/instructorspace-hiv2020\:/data/:ro \
+        -e NB_UID=1000 \
+        -t jupyter-hiv-test2020
