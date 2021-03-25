@@ -147,9 +147,9 @@ RUN mkdir /home/$NB_USER/work && \
 
 USER root
 
-RUN pip3 install --upgrade setuptools
-RUN pip3 install wheel
-RUN pip3 install jupyter
+RUN pip3 install --no-cache-dir --upgrade setuptools
+RUN pip3 install --no-cache-dir wheel
+RUN pip3 install --no-cache-dir jupyter
 
 RUN pip3 install --no-cache-dir  \
  #   'nomkl' \
@@ -195,7 +195,7 @@ RUN pip3 install --no-cache-dir 'pandas-datareader' \
     'plotnine' \
     'xlrd' 
 
-RUN pip3 install  \
+RUN pip3 install --no-cache-dir  \
     'numpy' \
     'pillow' \
     'requests' \
@@ -210,11 +210,11 @@ RUN pip3 install  \
     'DukeDSClient' \
     'multiqc'
 
-RUN pip3 install  bash_kernel && python3 -m bash_kernel.install
+RUN pip3 install --no-cache-dir bash_kernel && python3 -m bash_kernel.install
 
 # downgrade matplotlib for multiqc
 RUN pip3 uninstall --yes matplotlib && \
-    pip3 install 'matplotlib==2.2.3'
+    pip3 install --no-cache-dir 'matplotlib==2.2.3'
 
     
 # USER root    
@@ -369,7 +369,7 @@ RUN Rscript -e "BiocManager::install(c('Gviz'))"
 RUN Rscript -e "BiocManager::install(c('phyloseq'))"
 
 # Import Rmarkdown into jupyter
-RUN pip3 install jupytext --upgrade
+RUN pip3 install --no-cache-dir jupytext --upgrade
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends --allow-unauthenticated \
