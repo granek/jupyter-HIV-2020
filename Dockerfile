@@ -1,7 +1,6 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-# FROM debian:buster 
 FROM ubuntu:20.04
 
 MAINTAINER Janice McCarthy "janice.mccarthy@duke.edu"
@@ -12,14 +11,20 @@ USER root
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
 ENV R_VERSION="4.0.4"
+ENV BIOCONDUCTOR_VERSION="3.12"
+ENV CRAN_REPO="'https://mran.revolutionanalytics.com/snapshot/2021-02-16'"
 
-RUN echo "adding repositories"
 
-RUN REPO=http://cdn-fastly.deb.debian.org \
- && echo "deb $REPO/debian buster main" > /etc/apt/sources.list \
- && echo "deb http://security.debian.org/debian-security buster/updates main contrib non-free" >> /etc/apt/sources.list \
- && apt-get update && apt-get -yq dist-upgrade \
- && apt-get install -yq --no-install-recommends \
+# get R from a CRAN archive 
+RUN apt-get update && \
+    apt-get -yq --no-install-recommends install \
+   gnupg2
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+RUN apt-get update && \
+    apt-get dist-upgrade -yq 
+
+RUN apt-get update && \
+    apt-get install -yq --no-install-recommends \
     wget \
     bzip2 \
     less \
@@ -46,7 +51,7 @@ RUN REPO=http://cdn-fastly.deb.debian.org \
     texlive-latex-extra \
     texlive-fonts-extra \
     texlive-fonts-recommended \
-    texlive-generic-recommended \
+    texlive-plain-generic \
     libxrender1 \
     inkscape \
     rsync \
@@ -54,10 +59,7 @@ RUN REPO=http://cdn-fastly.deb.debian.org \
     tar \
     python3-pip \
     apt-utils \
-    curl
- 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    curl \
     libxml2-dev \
     libgsl0-dev \
     ffmpeg \
@@ -66,24 +68,20 @@ RUN apt-get update && \
     parallel \
     time \
     htop \
-    rna-star
-
-RUN echo "backports\n"
-RUN echo "deb http://ftp.debian.org/debian buster-backports main" > /etc/apt/sources.list.d/backports.list && \
-    apt-get update && \
-    apt-get -t buster-backports install -y --no-install-recommends \
+    rna-star \
     bwa \
     samtools \
     tabix \
     picard-tools \
     openjdk-11-jdk \
     openjdk-11-jre \
-    sra-toolkit \
     bcftools \
     bedtools \
     vcftools \
     seqtk \
     lftp
+    # sra-toolkit \
+
     
 # we need dvipng so that matplotlib can do LaTeX
 # we want OpenBLAS for faster linear algebra as described here: http://brettklamer.com/diversions/statistical/faster-blas-in-r/
@@ -252,9 +250,8 @@ RUN apt-get update && \
 
 # Add cran repo
 
-RUN echo "deb http://cloud.r-project.org/bin/linux/debian buster-cran40/" >> /etc/sources.list && \
-    apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF' && \ 
-    add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
+RUN echo "deb http://cran.r-project.org/bin/linux/ubuntu focal-cran40/" > /etc/apt/sources.list.d/r.list && \
+    add-apt-repository 'deb http://cran.r-project.org/bin/linux/ubuntu focal-cran40/'
 
 RUN apt-get update && \
     apt-get -yq --no-install-recommends install \
