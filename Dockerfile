@@ -1,7 +1,8 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-FROM debian:buster 
+# FROM debian:buster 
+FROM ubuntu:20.04
 
 MAINTAINER Janice McCarthy "janice.mccarthy@duke.edu"
 
