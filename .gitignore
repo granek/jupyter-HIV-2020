@@ -1,2 +1,4 @@
 .DS_Store
 docker-scripts/nginx/ssl
+.Rproj.user
+jupyter-HIV-2020.Rproj
