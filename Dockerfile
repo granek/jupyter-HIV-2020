@@ -313,12 +313,19 @@ RUN Rscript -e "install.packages(c('Seurat'), repos = 'https://cloud.r-project.o
 RUN pip3 install --no-cache-dir \
     'scanpy[leiden]'
 
-RUN cd /opt && \
-    wget -O cellranger-6.0.0.tar.gz "https://cf.10xgenomics.com/releases/cell-exp/cellranger-6.0.0.tar.gz?Expires=1618323479&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci02LjAuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTgzMjM0Nzl9fX1dfQ__&Signature=hyLIPFprzIwEdKxl-yklUAlMzi7XL3ka9ya66Dg07ynM7dqneuu30eQgAZmJQwVxAgncTwccFvfhIYBOpLj5P7QxaUz3pdEdZ5Q-myZW3PeMx-Pf9edPGh1QDuidwk~A~I~oP9vGcD0Ggfufb5vsdKroS2DczDGY5OkgcOr~VMWnvU~uhsYe-nw8tGZyLjcpwY8Ep0Re7wifneYVIQ~B11bNhvtrKWlpXXAd6oLMtyg-O0gsOI3EdLFHW7YpesE~VU~REXT-6lLbZrTXXBzjDSmWYmfJmHoYT5FWZCV0hJo-4M9MP9VP0JiVc11jRqyun2an~~kBItvAxjzXWZZlQw__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA" && \
-    tar -xzvf cellranger-6.0.0.tar.gz && \
-    rm cellranger-6.0.0.tar.gz
+# RUN cd /opt && \
+#     wget -O cellranger-6.0.0.tar.gz "https://cf.10xgenomics.com/releases/cell-exp/cellranger-6.0.0.tar.gz?Expires=1618323479&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci02LjAuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTgzMjM0Nzl9fX1dfQ__&Signature=hyLIPFprzIwEdKxl-yklUAlMzi7XL3ka9ya66Dg07ynM7dqneuu30eQgAZmJQwVxAgncTwccFvfhIYBOpLj5P7QxaUz3pdEdZ5Q-myZW3PeMx-Pf9edPGh1QDuidwk~A~I~oP9vGcD0Ggfufb5vsdKroS2DczDGY5OkgcOr~VMWnvU~uhsYe-nw8tGZyLjcpwY8Ep0Re7wifneYVIQ~B11bNhvtrKWlpXXAd6oLMtyg-O0gsOI3EdLFHW7YpesE~VU~REXT-6lLbZrTXXBzjDSmWYmfJmHoYT5FWZCV0hJo-4M9MP9VP0JiVc11jRqyun2an~~kBItvAxjzXWZZlQw__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA" && \
+#     tar -xzvf cellranger-6.0.0.tar.gz && \
+#     rm cellranger-6.0.0.tar.gz
+# ENV PATH $PATH:/opt/cellranger-6.0.0
 
-ENV PATH $PATH:/opt/cellranger-6.0.0
+
+RUN cd /opt && \
+    curl -o cellranger-5.0.1.tar.gz "https://cf.10xgenomics.com/releases/cell-exp/cellranger-5.0.1.tar.gz?Expires=1618411448&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci01LjAuMS50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTg0MTE0NDh9fX1dfQ__&Signature=dCkEB~3So93khr5~50BkIWsgjVS8iJHLuFrQVS9yziOjt~YjNyu~5Yac1bm8nD5qEh1EWje4dk-SI8M7Bq71iezDaBI26~tSSi-s7beTvjgE-Ib5tjwcqLV36uy1E4J98bZAFW6yU-sE9JRsRZa99lh-qu7TbEz9BvFQSfYFczmBX5f0EZwEm7ogREp7NVywA1Qhr-ljg6JDiEqeoayjIowMF6WkVR6s~zZUWS8RScQRSpbZcqh0hOoSHOQhWrIW4lyxXPDj7kjKd3lQMi6ghkSg6kkQH5DsYUWpcK1mV~dQ-J0S~opGB3SviFLtxe9edLp67jjY6Ex4fpeo3HhdAA__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA" && \
+    tar -xzvf cellranger-5.0.1.tar.gz && \
+    rm cellranger-5.0.1.tar.gz
+ENV PATH $PATH:/opt/cellranger-5.0.1
+
 #----------- End scRNA-Seq
 
 
