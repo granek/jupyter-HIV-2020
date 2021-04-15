@@ -308,20 +308,41 @@ RUN mkdir -p /usr/bin && \
     	  rm -rf ea-utils-1.04.807
 	  
 #----------- end datascience
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    art-nextgen-simulation-tools \
+    art-nextgen-simulation-tools-profiles
+
+RUN Rscript -e "BiocManager::install(c('Gviz'))"
+RUN Rscript -e "BiocManager::install(c('phyloseq'))"
+
+# Import Rmarkdown into jupyter
+RUN pip3 install --no-cache-dir jupytext --upgrade
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends --allow-unauthenticated \
+    python3-rpy2 \
+    python3-tzlocal \
+    python3-simplegeneric
+
 #----------- Begin scRNA-Seq
 RUN Rscript -e "install.packages(c('Seurat'), repos = 'https://cloud.r-project.org/')"
 RUN pip3 install --no-cache-dir \
     'scanpy[leiden]'
 
-# RUN cd /opt && \
-#     wget -O cellranger-6.0.0.tar.gz "https://cf.10xgenomics.com/releases/cell-exp/cellranger-6.0.0.tar.gz?Expires=1618323479&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci02LjAuMC50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTgzMjM0Nzl9fX1dfQ__&Signature=hyLIPFprzIwEdKxl-yklUAlMzi7XL3ka9ya66Dg07ynM7dqneuu30eQgAZmJQwVxAgncTwccFvfhIYBOpLj5P7QxaUz3pdEdZ5Q-myZW3PeMx-Pf9edPGh1QDuidwk~A~I~oP9vGcD0Ggfufb5vsdKroS2DczDGY5OkgcOr~VMWnvU~uhsYe-nw8tGZyLjcpwY8Ep0Re7wifneYVIQ~B11bNhvtrKWlpXXAd6oLMtyg-O0gsOI3EdLFHW7YpesE~VU~REXT-6lLbZrTXXBzjDSmWYmfJmHoYT5FWZCV0hJo-4M9MP9VP0JiVc11jRqyun2an~~kBItvAxjzXWZZlQw__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA" && \
-#     tar -xzvf cellranger-6.0.0.tar.gz && \
-#     rm cellranger-6.0.0.tar.gz
-# ENV PATH $PATH:/opt/cellranger-6.0.0
 
+ARG CELLRANGER_600_URL="https://cf.10xgenomics.com/releases/cell-exp/cellranger-6.0.1.tar.gz?Expires=1618559649&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci02LjAuMS50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTg1NTk2NDl9fX1dfQ__&Signature=eh9FXKm3jqaQRYr4ZA5C0IQQnZmO8wY~DmQ7GE0eRhKCyDpGDlpnI4EVc~Xp9AeM3iX~5rOZWjdLwf12xLfTF42YTi2epWJlnZjUS6ajVVo2NKPstSa-Fl0L4AWiZ0dZalYTgY1zGqU1pay0FsDYfVWt6hxcaopacSqdlhLdhiOWpHK54bGEgjpLVfQUbVk3MhKnT8xM8CRjaJ260jA4a0CZisRrvzXbJv6VzIszSohXfXLtXtnCpApBKGGe6PCWEwhFD5X1dm-M0oPYx5Q5jKGqKrsdPfyhkvaFVdigMPOtvI6fIDhu8jL8klzu-wWIqIfUoY0hVIU6lTBxOXQljA__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
+
+ARG CELLRANGER_501_URL="https://cf.10xgenomics.com/releases/cell-exp/cellranger-5.0.1.tar.gz?Expires=1618559413&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci01LjAuMS50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTg1NTk0MTN9fX1dfQ__&Signature=P2llHsgm1YU2SKTMFKDuCtpC7fH3LbHlseTXEHzM1Txk8byC0fh4AMTgfbar7FGlF08C5SDqpaEteF~shGA77VxmdsS5Jx1uUwnwcdLEph4mzfjPjGkLL~qSqFa-cfxSSpkBa42SvegHYYucHZNgUERzuP-kAJyxKK3YO77lKc420f5f8joKz7VDcwuLApPcJmDbuZxhqa3iNGggTdqJ5ORrHgnO8Qd1E8runZM1HG1ZRb8mZrWlGpcKoY17rUWxDUkF1-dOgLByOGSu78ohAOq6qkdB8iFbWS7g73zlVbvRZ497F~oAYzow1W2bwKSr92BFbxeNhu3Lxx8decIOTg__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
 
 RUN cd /opt && \
-    curl -o cellranger-5.0.1.tar.gz "https://cf.10xgenomics.com/releases/cell-exp/cellranger-5.0.1.tar.gz?Expires=1618411448&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci01LjAuMS50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTg0MTE0NDh9fX1dfQ__&Signature=dCkEB~3So93khr5~50BkIWsgjVS8iJHLuFrQVS9yziOjt~YjNyu~5Yac1bm8nD5qEh1EWje4dk-SI8M7Bq71iezDaBI26~tSSi-s7beTvjgE-Ib5tjwcqLV36uy1E4J98bZAFW6yU-sE9JRsRZa99lh-qu7TbEz9BvFQSfYFczmBX5f0EZwEm7ogREp7NVywA1Qhr-ljg6JDiEqeoayjIowMF6WkVR6s~zZUWS8RScQRSpbZcqh0hOoSHOQhWrIW4lyxXPDj7kjKd3lQMi6ghkSg6kkQH5DsYUWpcK1mV~dQ-J0S~opGB3SviFLtxe9edLp67jjY6Ex4fpeo3HhdAA__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA" && \
+    curl -o cellranger-6.0.0.tar.gz $CELLRANGER_600_URL && \
+    tar -xzvf cellranger-6.0.0.tar.gz && \
+    rm cellranger-6.0.0.tar.gz
+ENV PATH $PATH:/opt/cellranger-6.0.0
+
+RUN cd /opt && \
+    curl -o cellranger-5.0.1.tar.gz $CELLRANGER_501_URL && \
     tar -xzvf cellranger-5.0.1.tar.gz && \
     rm cellranger-5.0.1.tar.gz
 ENV PATH $PATH:/opt/cellranger-5.0.1
@@ -378,25 +399,6 @@ USER $NB_USER
 
 # UNDER CONSTRUCTION: Nerd Work Zone >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # USER $NB_USER
-USER root
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    art-nextgen-simulation-tools \
-    art-nextgen-simulation-tools-profiles
-
-RUN Rscript -e "BiocManager::install(c('Gviz'))"
-RUN Rscript -e "BiocManager::install(c('phyloseq'))"
-
-# Import Rmarkdown into jupyter
-RUN pip3 install --no-cache-dir jupytext --upgrade
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends --allow-unauthenticated \
-    python3-rpy2 \
-    python3-tzlocal \
-    python3-simplegeneric
-
-
 # UNDER CONSTRUCTION: Nerd Work Zone <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 #######
