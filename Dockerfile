@@ -330,22 +330,23 @@ RUN Rscript -e "install.packages(c('Seurat'), repos = 'https://cloud.r-project.o
 RUN pip3 install --no-cache-dir \
     'scanpy[leiden]'
 
+# https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest
+ARG CELLRANGER_601_URL="https://cf.10xgenomics.com/releases/cell-exp/cellranger-6.0.1.tar.gz?Expires=1619015076&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci02LjAuMS50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTkwMTUwNzZ9fX1dfQ__&Signature=nxWYnyXipxHSjY2CNviGKoI4Hfl8x2zs6W5-SKfEK8zsqQ7XyWZuN78KQDEZM4DUblRrL64Uiv26dge0Q6CsW2bLlT6lzpurSv81-m0AS6CxAHgiTbL0Cg1wKXkf02R2AjFNTSRz0dIQiiRYJRjt5dK0fKzvvMXNEzlM0tFrlGZEeWWo0792zu6Vi~BDUyHzS75LhZ5Klimv7WVd1Vp3AIECM6iLtwPfKij6X8ks3Izn65wJy0GYlvAg3cv0s90MJcmk9OSBr3sF9GDQMxvBBGZJVKukXAo6tNo~5NAqdqqMryKCymCJJwRmtH2GiU9z0xhvPWxVKzyAYsqJ8z1hYQ__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
 
-ARG CELLRANGER_600_URL="https://cf.10xgenomics.com/releases/cell-exp/cellranger-6.0.1.tar.gz?Expires=1618559649&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci02LjAuMS50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTg1NTk2NDl9fX1dfQ__&Signature=eh9FXKm3jqaQRYr4ZA5C0IQQnZmO8wY~DmQ7GE0eRhKCyDpGDlpnI4EVc~Xp9AeM3iX~5rOZWjdLwf12xLfTF42YTi2epWJlnZjUS6ajVVo2NKPstSa-Fl0L4AWiZ0dZalYTgY1zGqU1pay0FsDYfVWt6hxcaopacSqdlhLdhiOWpHK54bGEgjpLVfQUbVk3MhKnT8xM8CRjaJ260jA4a0CZisRrvzXbJv6VzIszSohXfXLtXtnCpApBKGGe6PCWEwhFD5X1dm-M0oPYx5Q5jKGqKrsdPfyhkvaFVdigMPOtvI6fIDhu8jL8klzu-wWIqIfUoY0hVIU6lTBxOXQljA__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
-
-ARG CELLRANGER_501_URL="https://cf.10xgenomics.com/releases/cell-exp/cellranger-5.0.1.tar.gz?Expires=1618559413&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci01LjAuMS50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTg1NTk0MTN9fX1dfQ__&Signature=P2llHsgm1YU2SKTMFKDuCtpC7fH3LbHlseTXEHzM1Txk8byC0fh4AMTgfbar7FGlF08C5SDqpaEteF~shGA77VxmdsS5Jx1uUwnwcdLEph4mzfjPjGkLL~qSqFa-cfxSSpkBa42SvegHYYucHZNgUERzuP-kAJyxKK3YO77lKc420f5f8joKz7VDcwuLApPcJmDbuZxhqa3iNGggTdqJ5ORrHgnO8Qd1E8runZM1HG1ZRb8mZrWlGpcKoY17rUWxDUkF1-dOgLByOGSu78ohAOq6qkdB8iFbWS7g73zlVbvRZ497F~oAYzow1W2bwKSr92BFbxeNhu3Lxx8decIOTg__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
-
-RUN cd /opt && \
-    curl -o cellranger-6.0.0.tar.gz $CELLRANGER_600_URL && \
-    tar -xzvf cellranger-6.0.0.tar.gz && \
-    rm cellranger-6.0.0.tar.gz
-ENV PATH $PATH:/opt/cellranger-6.0.0
+# https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/5.0
+ARG CELLRANGER_501_URL="https://cf.10xgenomics.com/releases/cell-exp/cellranger-5.0.1.tar.gz?Expires=1619015190&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci01LjAuMS50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MTkwMTUxOTB9fX1dfQ__&Signature=oai7v0xlEb7VThyedDUuPvsV9vDDjeUD5UIhr3PasmmTz--ritC9~G-H7jpNO~XEBrXzoptz9vOj7W2dh6jZjvLPfCB-CwTIFGjKH2pEkFOAUlUoC5pI~H0HNrMuLMsAPNnf7dFAezzDuRwG-g7WYR2BbQBzcC5WqrMGBFViloZ4oXiJCbwwLPttbjojcZr~F9OsGmt0z1L2L1R5Be5sZsmasoSc7ODoC6wDhlxSi-nbdreRZZTl6Khs2Mm4rFtWWhiisCCovM3N5z96kVDtTVZWMkA~5NAcLgs6o4~8b-ykiDjuvIOWjGByW53B9uqQRp0C4PXwhn5QMg4bEBZ5HA__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
 
 RUN cd /opt && \
-    curl -o cellranger-5.0.1.tar.gz $CELLRANGER_501_URL && \
-    tar -xzvf cellranger-5.0.1.tar.gz && \
-    rm cellranger-5.0.1.tar.gz
-ENV PATH $PATH:/opt/cellranger-5.0.1
+    curl -o cellranger-6.0.1.tar.gz $CELLRANGER_601_URL && \
+    tar -xzvf cellranger-6.0.1.tar.gz && \
+    rm cellranger-6.0.1.tar.gz
+ENV PATH $PATH:/opt/cellranger-6.0.1
+
+# RUN cd /opt && \
+#     curl -o cellranger-5.0.1.tar.gz $CELLRANGER_501_URL && \
+#     tar -xzvf cellranger-5.0.1.tar.gz && \
+#     rm cellranger-5.0.1.tar.gz
+# ENV PATH $PATH:/opt/cellranger-5.0.1
 
 #----------- End scRNA-Seq
 
