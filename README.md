@@ -120,9 +120,11 @@ srun singularity exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/sta
 > Note: the first time you run this, it might take a VERY long time to download the Docker image and build the Singularity image from it
 
 Running this command will print a bunch of stuff. You can ignore everything except the last two lines, which will say something like:
-
+```
 http://dcc-chsi-01:8889/?token=08172007896ad29bb5fbd92f6f3f516a8b2f7303ed7f1df3
 or http://127.0.0.1:8889/?token=08172007896ad29bb5fbd92f6f3f516a8b2f7303ed7f1df3
+```
+
 You need this information for the next few steps. For the next step you need the “dcc-chsi-01:8889” part.
 “dcc-chsi-01” is the compute node that Jupyter is running on and “8889” is the port it is listening on. You may get a different value every time you start the container.
 
@@ -168,11 +170,16 @@ srun -A chsi -p chsi singularity exec docker://dukehtscourse/jupyter-hts-2019 /u
 srun singularity --bind /work/josh:/work/josh exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
 ```
 
-5. You can combine several of these command line flags:
+6. You can combine several of these command line flags:
 ```
-srun -A chsi -p chsi --cpus-per-task=4 --mem=10G singularity --bind /work/josh:/work/josh exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
+srun -A chsi -p chsi --cpus-per-task=4 --mem=10G singularity  exec --bind /work/josh:/work/josh docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
+```
 
 6. It is strongly recommended to set the `SINGULARITY_CACHEDIR` environment variables in your .bashrc or when running `srun`. This environment variable specifies where the Docker image (and the Singularity image built from it) are saved. If this variable is not specified, singularity will cache images in `$HOME/.singularity/cache`, which can fill up quickly. This is discussed in the [Singularity Documentation](https://sylabs.io/guides/3.7/user-guide/build_env.html#cache-folders)
+
+```
+export SINGULARITY_CACHEDIR="/work/josh/singularity_cache"; srun -A chsi -p chsi --cpus-per-task=4 --mem=10G singularity  exec --bind /work/josh:/work/josh docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
+```
 
 ### Install Singularity
 Here are instructions for installing:
