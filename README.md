@@ -93,10 +93,86 @@ Docker requires root permissions to run, so you are unlikely to be able to run D
 
 The following command uses Singularity to start up a container from the course Jupyter image.
 ```
-export USE_HTTPS=yes; \
-    singularity exec docker://dukehtscourse/jupyter-hts-2019 \
-    /usr/local/bin/start-notebook.sh 
+singularity exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
 ```
+
+### Running the Course Image on a SLURM cluster
+
+
+
+  506  /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser 
+
+
+We will use the example of the Duke Computer Cluster, but these instructions should be easily adaptable to other clusters
+
+1. From your computer run this to connect to DCC:
+```
+ssh NetID@dcc-login-03.oit.duke.edu
+```
+2. Once you are connected run this to start a tmux session:
+```
+tmux new -s jupyter
+```
+3. Once you have started a tmux session you can start up Jupyter with this command:
+```
+srun singularity exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
+```
+> Note: the first time you run this, it might take a VERY long time to download the Docker image and build the Singularity image from it
+
+Running this command will print a bunch of stuff. You can ignore everything except the last two lines, which will say something like:
+
+http://dcc-chsi-01:8889/?token=08172007896ad29bb5fbd92f6f3f516a8b2f7303ed7f1df3
+or http://127.0.0.1:8889/?token=08172007896ad29bb5fbd92f6f3f516a8b2f7303ed7f1df3
+You need this information for the next few steps. For the next step you need the “dcc-chsi-01:8889” part.
+“dcc-chsi-01” is the compute node that Jupyter is running on and “8889” is the port it is listening on. You may get a different value every time you start the container.
+
+4. You want to run the following command in another terminal on your computer to set up port forwarding.
+```
+ssh -L PORT:NODE.rc.duke.edu:PORT NetID@dcc-login-03.oit.duke.edu
+```
+In this command you want to replace “PORT” with the value you got for port from the srun command and replace “NODE” with the compute node that was printed by the srun command. So for the example above, the ssh port forwarding command would be:
+
+```
+ssh -L 8889:dcc-chsi-01.rc.duke.edu:8889 NetID@dcc-login-03.oit.duke.edu
+```
+
+5. Now you can put the last line that the srun command printed in your web browser and it should open your Jupyter instance running on DCC.
+
+#### Notes
+1. The Jupyter session keeps running until you explicitly shut it down.  If the port forwarding SSH connection drops you will need to restart SSH with the same command, but you don’t need to restart Jupyter.
+
+2. There are two ways to explicitly shut down Jupyter:
+    1. Within Jupyter, click on the *Jupyter* logo in the top left to go to the main Jupyter page, then click "Quit" in the top right
+    2. Do control-C twice in the terminal where you started Jupyter. If this connection dropped, you can reconnect to it with:
+    ```
+    ssh NetID@dcc-login-03.oit.duke.edu
+    tmux a -t jupyter
+    ```
+    After shutting down the Jupyter session you can type `exit` at the terminal to close the tmux session.
+
+3. If you need more memory or more cpus you can use the `--mem` and/or `--cpus-per-task` arguments to in the “srun”, for example to request 4 CPUs and 10GB of RAM:
+```
+srun --cpus-per-task=4 --mem=10G singularity exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
+```
+
+4. If you have high priority access to a partition you can request that partition be used with the `-A` and `-p` arguments to `srun`:
+```
+srun -A chsi -p chsi singularity exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
+```
+
+5. You might want to access files that are outside of your home directory. Within a singularity container your access to the host computer is
+    limited: by default, from inside the container you can only access your home directory. If you want to access directories that are outside your home
+    directory, you have to tell *Singularity* when you start the container with the `--bind` command line argument. For example:
+
+```
+srun singularity --bind /work/josh:/work/josh exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
+```
+
+5. You can combine several of these command line flags:
+```
+srun -A chsi -p chsi --cpus-per-task=4 --mem=10G singularity --bind /work/josh:/work/josh exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser
+
+6. It is strongly recommended to set the `SINGULARITY_CACHEDIR` environment variables in your .bashrc or when running `srun`. This environment variable specifies where the Docker image (and the Singularity image built from it) are saved. If this variable is not specified, singularity will cache images in `$HOME/.singularity/cache`, which can fill up quickly. This is discussed in the [Singularity Documentation](https://sylabs.io/guides/3.7/user-guide/build_env.html#cache-folders)
 
 ### Install Singularity
 Here are instructions for installing:
