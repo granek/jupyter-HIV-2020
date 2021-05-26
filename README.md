@@ -98,11 +98,6 @@ singularity exec docker://dukehtscourse/jupyter-hts-2019 /usr/local/bin/start.sh
 
 ### Running the Course Image on a SLURM cluster
 
-
-
-  506  /usr/local/bin/start.sh jupyter notebook --ip=0.0.0.0 --no-browser 
-
-
 We will use the example of the Duke Computer Cluster, but these instructions should be easily adaptable to other clusters
 
 1. From your computer run this to connect to DCC:
